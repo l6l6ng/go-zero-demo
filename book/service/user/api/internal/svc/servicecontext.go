@@ -8,13 +8,13 @@ import (
 
 type ServiceContext struct {
 	Config    config.Config
-	userModel model.UserModel
+	UserModel model.UserModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
 	return &ServiceContext{
 		Config:    c,
-		userModel: model.NewUserModel(conn, c.CacheRedis),
+		UserModel: model.NewUserModel(conn, c.CacheRedis),
 	}
 }

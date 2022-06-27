@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"errors"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/l6l6ng/go-zero-demo/book/service/user/model"
 	"strings"
 	"time"
@@ -62,4 +63,14 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginReply, err err
 		AccessExpire: now + accessExpire,
 		RefreshAfter: now + accessExpire/2,
 	}, nil
+}
+
+func (l *LoginLogic) getJwtToken(secretKey string, iat, seconds, userId int64) (string, error) {
+	claims := make(jwt.MapClaims)
+	claims["exp"] = iat + seconds
+	claims["iat"] = iat
+	claims["userId"] = userId
+	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims = claims
+	return token.SignedString([]byte(secretKey))
 }
