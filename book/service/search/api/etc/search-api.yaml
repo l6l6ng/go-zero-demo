@@ -4,3 +4,8 @@ Port: 8889
 Auth:
   AccessSecret: "abcd1234"
   AccessExpire: 604800
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc

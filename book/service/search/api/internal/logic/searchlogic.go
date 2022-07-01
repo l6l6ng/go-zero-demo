@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/l6l6ng/go-zero-demo/book/service/user/rpc/types/user"
 
 	"github.com/l6l6ng/go-zero-demo/book/service/search/api/internal/svc"
 	"github.com/l6l6ng/go-zero-demo/book/service/search/api/internal/types"
@@ -24,9 +27,23 @@ func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogi
 }
 
 func (l *SearchLogic) Search(req *types.SearchReq) (resp *types.SearchReply, err error) {
-	logx.Infof("userId:%v", l.ctx.Value("userId")) //这里的key和生成jwt token时传入的key一致
+	userIdBumber := json.Number(fmt.Sprintf("%v", l.ctx.Value("userId")))
+	logx.Infof("userId:%s", userIdBumber)
+	userId, err := userIdBumber.Int64()
+	if err != nil {
+		return nil, err
+	}
+
+	//使用user rpc
+	_, err = l.svcCtx.UserRpc.GetUser(l.ctx, &user.IdReq{
+		Id: userId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	return &types.SearchReply{
-		Name:  "1",
-		Count: 0,
+		Name:  req.Name,
+		Count: 100,
 	}, nil
 }
