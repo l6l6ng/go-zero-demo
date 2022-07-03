@@ -18,3 +18,4 @@ service user-api {
 	@handler login
 	post /user/login (LoginReq) returns (LoginReply)
 }
+
